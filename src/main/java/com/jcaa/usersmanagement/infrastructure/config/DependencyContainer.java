@@ -4,6 +4,7 @@ import com.jcaa.usersmanagement.application.port.in.CreateResiduoUseCase;
 import com.jcaa.usersmanagement.application.port.in.CreateUserUseCase;
 import com.jcaa.usersmanagement.application.port.in.DeleteResiduoUseCase;
 import com.jcaa.usersmanagement.application.port.in.DeleteUserUseCase;
+import com.jcaa.usersmanagement.application.port.in.GetAllResiduosUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetAllUsersUseCase;
 import com.jcaa.usersmanagement.application.port.in.GetUserByIdUseCase;
 import com.jcaa.usersmanagement.application.port.in.LoginUseCase;
@@ -13,6 +14,7 @@ import com.jcaa.usersmanagement.application.service.CreateUserService;
 import com.jcaa.usersmanagement.application.service.DeleteResiduoService;
 import com.jcaa.usersmanagement.application.service.DeleteUserService;
 import com.jcaa.usersmanagement.application.service.EmailNotificationService;
+import com.jcaa.usersmanagement.application.service.GetAllResiduosService;
 import com.jcaa.usersmanagement.application.service.GetAllUsersService;
 import com.jcaa.usersmanagement.application.service.GetUserByIdService;
 import com.jcaa.usersmanagement.application.service.LoginService;
@@ -74,7 +76,6 @@ public final class DependencyContainer {
             createUserUseCase, updateUserUseCase, deleteUserUseCase,
             getUserByIdUseCase, getAllUsersUseCase, loginUseCase);
 
-
     final ResiduoRepositoryMySQL residuoRepository =
             new ResiduoRepositoryMySQL(connection);
 
@@ -82,9 +83,11 @@ public final class DependencyContainer {
             new CreateResiduoService(residuoRepository, validator);
     final DeleteResiduoUseCase deleteResiduoUseCase =
             new DeleteResiduoService(residuoRepository, residuoRepository, validator);
+    final GetAllResiduosUseCase getAllResiduosUseCase =
+            new GetAllResiduosService(residuoRepository);
 
     this.residuoController = new ResiduoController(
-            createResiduoUseCase, deleteResiduoUseCase);
+            createResiduoUseCase, deleteResiduoUseCase, getAllResiduosUseCase);
   }
 
   public UserController    userController()    { return userController; }
