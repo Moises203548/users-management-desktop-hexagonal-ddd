@@ -1,6 +1,7 @@
 package com.jcaa.usersmanagement.infrastructure.adapter.persistence.repository;
 
 import com.jcaa.usersmanagement.application.port.out.DeleteResiduoPort;
+import com.jcaa.usersmanagement.application.port.out.GetAllResiduosPort;
 import com.jcaa.usersmanagement.application.port.out.GetResiduoByIdPort;
 import com.jcaa.usersmanagement.application.port.out.SaveResiduoPort;
 import com.jcaa.usersmanagement.domain.exception.ResiduoNotFoundException;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -22,7 +24,8 @@ import lombok.extern.java.Log;
 public final class ResiduoRepositoryMySQL
         implements SaveResiduoPort,
         DeleteResiduoPort,
-        GetResiduoByIdPort {
+        GetResiduoByIdPort,
+        GetAllResiduosPort {
 
   private static final String SQL_INSERT =
           "INSERT INTO residuo (id, id_productor, tipo_residuo, peligroso, peso_kg, fecha_generacion) "
@@ -31,6 +34,10 @@ public final class ResiduoRepositoryMySQL
   private static final String SQL_SELECT_BY_ID =
           "SELECT id, id_productor, tipo_residuo, peligroso, peso_kg, fecha_generacion "
                   + "FROM residuo WHERE id = ? LIMIT 1";
+
+  private static final String SQL_SELECT_ALL =
+          "SELECT id, id_productor, tipo_residuo, peligroso, peso_kg, fecha_generacion "
+                  + "FROM residuo ORDER BY fecha_generacion DESC";
 
   private static final String SQL_DELETE =
           "DELETE FROM residuo WHERE id = ?";
@@ -65,6 +72,16 @@ public final class ResiduoRepositoryMySQL
       return Optional.of(ResiduoPersistenceMapper.fromResultSetToModel(rs));
     } catch (final SQLException ex) {
       throw PersistenceException.becauseFindByIdFailed(id.value(), ex);
+    }
+  }
+
+  @Override
+  public List<ResiduoModel> getAll() {
+    try (final PreparedStatement st = connection.prepareStatement(SQL_SELECT_ALL)) {
+      final ResultSet rs = st.executeQuery();
+      return ResiduoPersistenceMapper.fromResultSetToModelList(rs);
+    } catch (final SQLException ex) {
+      throw PersistenceException.becauseFindAllFailed(ex);
     }
   }
 
