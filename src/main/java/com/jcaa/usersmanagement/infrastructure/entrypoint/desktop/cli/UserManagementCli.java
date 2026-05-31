@@ -5,6 +5,7 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.Cr
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteResiduoHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteUserHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindUserByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListResiduosHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListUsersHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.LoginHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
@@ -86,7 +87,8 @@ public final class UserManagementCli {
             Map.entry(MenuOption.DELETE_USER,    new DeleteUserHandler(userController, console)),
             Map.entry(MenuOption.LOGIN,          new LoginHandler(userController, console, userPrinter)),
             Map.entry(MenuOption.CREATE_RESIDUO, new CreateResiduoHandler(residuoController, console, residuoPrinter)),
-            Map.entry(MenuOption.DELETE_RESIDUO, new DeleteResiduoHandler(residuoController, console)));
+            Map.entry(MenuOption.DELETE_RESIDUO, new DeleteResiduoHandler(residuoController, console)),
+            Map.entry(MenuOption.LIST_RESIDUOS,  new ListResiduosHandler(residuoController, residuoPrinter)));
   }
 
   private void printMenu() {
