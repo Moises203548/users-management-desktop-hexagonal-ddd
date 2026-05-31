@@ -8,15 +8,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MenuOption {
 
-  LIST_USERS(1, "List all users"),
-  FIND_USER(2, "Find user by ID"),
-  CREATE_USER(3, "Create user"),
-  UPDATE_USER(4, "Update user"),
-  DELETE_USER(5, "Delete user"),
-  LOGIN(6, "Login"),
-  EXIT(0, "Exit");
+  LIST_USERS(1,  "Listar todos los usuarios"),
+  FIND_USER(2,   "Buscar usuario por ID"),
+  CREATE_USER(3, "Crear usuario"),
+  UPDATE_USER(4, "Actualizar usuario"),
+  DELETE_USER(5, "Eliminar usuario"),
+  LOGIN(6,       "Login"),
 
-  private final int number;
+  CREATE_RESIDUO(7, "Crear residuo"),
+  DELETE_RESIDUO(8, "Eliminar residuo"),
+
+  EXIT(0, "Salir");
+
+  private final int    number;
   private final String description;
 
   public static Optional<MenuOption> fromNumber(final int number) {
@@ -28,4 +32,3 @@ public enum MenuOption {
     return Optional.empty();
   }
 }
-
