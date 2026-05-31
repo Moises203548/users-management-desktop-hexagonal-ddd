@@ -17,6 +17,7 @@ public enum MenuOption {
 
   CREATE_RESIDUO(7, "Crear residuo"),
   DELETE_RESIDUO(8, "Eliminar residuo"),
+  LIST_RESIDUOS(9,  "Listar todos los residuos"),
 
   EXIT(0, "Salir");
 
