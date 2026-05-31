@@ -5,6 +5,7 @@ import com.jcaa.usersmanagement.application.service.dto.command.DeleteResiduoCom
 import com.jcaa.usersmanagement.domain.model.ResiduoModel;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.CreateResiduoRequest;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.dto.ResiduoResponse;
+import java.util.List;
 
 public final class ResiduoDesktopMapper {
 
@@ -31,5 +32,9 @@ public final class ResiduoDesktopMapper {
             residuo.isPeligroso(),
             residuo.getPesoKg().toPlainString(),
             residuo.getFechaGeneracion().toString());
+  }
+
+  public static List<ResiduoResponse> toResponseList(final List<ResiduoModel> residuos) {
+    return residuos.stream().map(ResiduoDesktopMapper::toResponse).toList();
   }
 }
