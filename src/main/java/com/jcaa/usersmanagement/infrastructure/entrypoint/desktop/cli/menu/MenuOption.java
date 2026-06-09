@@ -19,6 +19,12 @@ public enum MenuOption {
   DELETE_RESIDUO(8, "Eliminar residuo"),
   LIST_RESIDUOS(9,  "Listar todos los residuos"),
 
+  FIND_RESIDUO_BY_ID(10,              "Consultar residuo por ID"),
+  GET_RESIDUOS_BY_TIPO(11,            "Tipos de residuos mas comunes"),
+  GET_TOTALES_BY_PRODUCTOR(12,        "Total de residuos por productor"),
+  GET_RESIDUOS_BY_PRODUCTOR(13,       "Residuos de un productor"),
+  GET_RESIDUOS_BY_PRODUCTOR_FECHAS(14,"Residuos de un productor por rango de fechas"),
+
   EXIT(0, "Salir");
 
   private final int    number;
@@ -26,9 +32,7 @@ public enum MenuOption {
 
   public static Optional<MenuOption> fromNumber(final int number) {
     for (final MenuOption option : values()) {
-      if (option.number == number) {
-        return Optional.of(option);
-      }
+      if (option.number == number) return Optional.of(option);
     }
     return Optional.empty();
   }
