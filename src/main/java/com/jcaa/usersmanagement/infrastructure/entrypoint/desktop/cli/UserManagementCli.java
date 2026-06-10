@@ -4,7 +4,12 @@ import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.Cr
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.CreateUserHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteResiduoHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.DeleteUserHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindResiduoByIdHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.FindUserByIdHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.GetResiduosByProductorAndFechasHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.GetResiduosByProductorHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.GetResiduosByTipoHandler;
+import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.GetTotalesByProductorHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListResiduosHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.ListUsersHandler;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.desktop.cli.handler.LoginHandler;
@@ -25,13 +30,13 @@ import lombok.RequiredArgsConstructor;
 public final class UserManagementCli {
 
   private static final String BANNER =
-          """
-          =============================================
-               Sistema de Gestion de Residuos
-          =============================================""";
+      """
+      =============================================
+           Sistema de Gestion de Residuos
+      =============================================""";
 
   private static final String MENU_BORDER =
-          "  =============================================";
+      "  =============================================";
 
   private final UserController    userController;
   private final ResiduoController residuoController;
@@ -50,9 +55,8 @@ public final class UserManagementCli {
       printMenu();
       final int choice = console.readInt("\n  Opcion: ");
       final Optional<MenuOption> option = MenuOption.fromNumber(choice);
-
       if (option.isEmpty()) {
-        console.println("  Opcion invalida. Intente de nuevo.");
+        console.println("  Opcion invalida.");
       } else if (option.get() == MenuOption.EXIT) {
         console.println("\n  Hasta luego!\n");
         running = false;
@@ -63,32 +67,40 @@ public final class UserManagementCli {
   }
 
   private void executeHandler(
-          final Map<MenuOption, OperationHandler> handlers, final MenuOption option) {
+      final Map<MenuOption, OperationHandler> handlers, final MenuOption option) {
     try {
       handlers.get(option).handle();
     } catch (final ConstraintViolationException ex) {
       console.println("  Errores de validacion:");
-      ex.getConstraintViolations()
-              .forEach(v -> console.println("    - " + v.getMessage()));
+      ex.getConstraintViolations().forEach(v -> console.println("    - " + v.getMessage()));
     } catch (final RuntimeException ex) {
-      console.println("  Error inesperado: " + ex.getMessage());
+      console.println("  Error: " + ex.getMessage());
     }
   }
 
   private Map<MenuOption, OperationHandler> buildHandlers(
-          final UserResponsePrinter    userPrinter,
-          final ResiduoResponsePrinter residuoPrinter) {
-
+      final UserResponsePrinter    userPrinter,
+      final ResiduoResponsePrinter residuoPrinter) {
     return Map.ofEntries(
-            Map.entry(MenuOption.LIST_USERS,     new ListUsersHandler(userController, userPrinter)),
-            Map.entry(MenuOption.FIND_USER,      new FindUserByIdHandler(userController, console, userPrinter)),
-            Map.entry(MenuOption.CREATE_USER,    new CreateUserHandler(userController, console, userPrinter)),
-            Map.entry(MenuOption.UPDATE_USER,    new UpdateUserHandler(userController, console, userPrinter)),
-            Map.entry(MenuOption.DELETE_USER,    new DeleteUserHandler(userController, console)),
-            Map.entry(MenuOption.LOGIN,          new LoginHandler(userController, console, userPrinter)),
-            Map.entry(MenuOption.CREATE_RESIDUO, new CreateResiduoHandler(residuoController, console, residuoPrinter)),
-            Map.entry(MenuOption.DELETE_RESIDUO, new DeleteResiduoHandler(residuoController, console)),
-            Map.entry(MenuOption.LIST_RESIDUOS,  new ListResiduosHandler(residuoController, residuoPrinter)));
+        Map.entry(MenuOption.LIST_USERS,     new ListUsersHandler(userController, userPrinter)),
+        Map.entry(MenuOption.FIND_USER,      new FindUserByIdHandler(userController, console, userPrinter)),
+        Map.entry(MenuOption.CREATE_USER,    new CreateUserHandler(userController, console, userPrinter)),
+        Map.entry(MenuOption.UPDATE_USER,    new UpdateUserHandler(userController, console, userPrinter)),
+        Map.entry(MenuOption.DELETE_USER,    new DeleteUserHandler(userController, console)),
+        Map.entry(MenuOption.LOGIN,          new LoginHandler(userController, console, userPrinter)),
+        Map.entry(MenuOption.CREATE_RESIDUO, new CreateResiduoHandler(residuoController, console, residuoPrinter)),
+        Map.entry(MenuOption.DELETE_RESIDUO, new DeleteResiduoHandler(residuoController, console)),
+        Map.entry(MenuOption.LIST_RESIDUOS,  new ListResiduosHandler(residuoController, residuoPrinter)),
+        Map.entry(MenuOption.FIND_RESIDUO_BY_ID,
+            new FindResiduoByIdHandler(residuoController, console, residuoPrinter)),
+        Map.entry(MenuOption.GET_RESIDUOS_BY_TIPO,
+            new GetResiduosByTipoHandler(residuoController, console)),
+        Map.entry(MenuOption.GET_TOTALES_BY_PRODUCTOR,
+            new GetTotalesByProductorHandler(residuoController, console)),
+        Map.entry(MenuOption.GET_RESIDUOS_BY_PRODUCTOR,
+            new GetResiduosByProductorHandler(residuoController, console, residuoPrinter)),
+        Map.entry(MenuOption.GET_RESIDUOS_BY_PRODUCTOR_FECHAS,
+            new GetResiduosByProductorAndFechasHandler(residuoController, console, residuoPrinter)));
   }
 
   private void printMenu() {
